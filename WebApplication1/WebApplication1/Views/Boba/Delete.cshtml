@@ -1,0 +1,51 @@
+﻿@model WebApplication1.Models.BubleTea
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Xóa</h2>
+
+<h3>Bạn có chắc là muốn xóa mục này khỏi danh sách?</h3>
+<div>
+    <h4>BubleTea</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Tên
+            @*@Html.DisplayNameFor(model => model.Name)*@
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            Thành tiền
+            @*@Html.DisplayNameFor(model => model.Price)*@
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            Topping
+            @*@Html.DisplayNameFor(model => model.Topping)*@
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Topping)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Xóa" class="btn btn-default" /> |
+            @Html.ActionLink("Quay về trang chủ", "Index")
+        </div>
+    }
+</div>
