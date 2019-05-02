@@ -96,17 +96,49 @@ namespace WebApplication1.Tests.Controllers
         [TestMethod]
         public void testEditP()
         {
-            var controller = new VLTeaController();
+            var db = new CS4PEEntities();
+            var model = new BubleTea
             {
-                var db = new CS4PEEntities();
-                var result = controller.Edit(0);
-                Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
-                var item = db.BubleTeas.First();
-                var kq = controller.Edit(item.id) as ViewResult;
-                Assert.IsNotNull(kq);
-                var model = kq.Model as BubleTea;
-                Assert.AreEqual(item.id, model.id);
+                id = db.BubleTeas.AsNoTracking().First().id,
+                Name = "Bông cúc",
+                Topping = "trân châu, bánh flan",
+                Price = 0
+            };
+
+            var controller = new VLTeaController();
+
+            using (var scope = new TransactionScope())
+            {
+                var result = controller.Edit(model);
+                var view = result as ViewResult;
+                Assert.IsNotNull(view);
+                Assert.IsInstanceOfType(view.Model, typeof(BubleTea));
+                Assert.AreEqual(Resource1.PRICE_LESS_0,
+                    controller.ViewData.ModelState["Price"].Errors[0].ErrorMessage);
+
+                model.Price = 20000;
+                controller = new VLTeaController();
+                result = controller.Edit(model);
+                var redirect = result as RedirectToRouteResult;
+                Assert.IsNotNull(redirect);
+                Assert.AreEqual("Index", redirect.RouteValues["action"]);
+                var item = db.BubleTeas.Find(model.id);
+                Assert.IsNotNull(item);
+                Assert.AreEqual(model.Name, item.Name);
+                Assert.AreEqual(model.Topping, item.Topping);
+                Assert.AreEqual(model.Price, item.Price);
             }
+            //var controller = new VLTeaController();
+            //{
+            //    var db = new CS4PEEntities();
+            //    var result = controller.Edit(0);
+            //    Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            //    var item = db.BubleTeas.First();
+            //    var kq = controller.Edit(item.id) as ViewResult;
+            //    Assert.IsNotNull(kq);
+            //    var model = kq.Model as BubleTea;
+            //    Assert.AreEqual(item.id, model.id);
+            //}
         }
 
         [TestMethod]
@@ -118,7 +150,15 @@ namespace WebApplication1.Tests.Controllers
             var result = controller.Edit(0);
             Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
 
-            var item = db.BubleTeas.First().id;
+            var item = db.BubleTeas.First();
+            result = controller.Edit(item.id);
+            var view = result as ViewResult;
+            Assert.IsNotNull(view);
+            var model = view.Model as BubleTea;
+            Assert.IsNotNull(model);
+            Assert.AreEqual(model.Name, item.Name);
+            Assert.AreEqual(model.Topping, item.Topping);
+            Assert.AreEqual(model.Price, item.Price);
         }
     }
 }
