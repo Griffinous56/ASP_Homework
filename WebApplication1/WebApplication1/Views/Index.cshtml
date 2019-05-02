@@ -1,0 +1,52 @@
+﻿@model IEnumerable<WebApplication1.Models.BubleTea>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>VL Tea - The Third Place</h2>
+
+<p>
+    <a href="@Url.Action("Create")">Thêm mới</a>
+    @*@Html.ActionLink("Create New", "Create")*@
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Topping)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <mark>@item.Name</mark>
+            @*@Html.DisplayFor(modelItem => item.Name)*@
+        </td>
+        <td>
+            <mark>@item.Price.ToString("N0")</mark>
+            @*@Html.DisplayFor(modelItem => item.Price)*@
+        </td>
+        <td>
+            <mark>@item.Topping</mark>
+            @*@Html.DisplayFor(modelItem => item.Topping)*@
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", new { id = item.id })">Sửa</a>
+            <a href="@Url.Action("Detail", new { id = item.id })">Chi tiết</a>
+            <a href="@Url.Action("Delete", new { id = item.id })">Xóa</a>
+            @*@Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })*@
+        </td>
+    </tr>
+}
+
+</table>
